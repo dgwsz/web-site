@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WNET</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent: #00d2ff;
+            --deep-blue: #1a4f8b;
+            --bg-dark: #02060a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        html { 
+            scroll-snap-type: y mandatory; 
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Fundo de Partículas */
+        #particles-js {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+        }
+
+        /* Brilho que segue o mouse */
+        .cursor-glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 210, 255, 0.07) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+        }
+
+        section {
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            scroll-snap-align: start;
+            position: relative;
+            text-align: center;
+        }
+
+        /* Cabeçalho */
+        .header-nav {
+            position: fixed;
+            top: 40px;
+            left: 50px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            mix-blend-mode: difference;
+        }
+
+        .logo-box {
+            width: 45px;
+            height: 45px;
+            border: 2px solid var(--accent);
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 900;
+            color: var(--accent);
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.3);
+        }
+
+        /* CORREÇÃO DO CARD: Alinhamento centralizado */
+        .profile-container {
+            position: relative;
+            padding: 30px;
+            border-radius: 30px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(15px);
+            transition: transform 0.5s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Alinha foto e botão no centro */
+            gap: 25px; /* Espaçamento igual entre foto e botão */
+        }
+
+        .profile-img-wrapper {
+            width: 280px;
+            height: 350px;
+            background: #000;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--accent);
+            position: relative;
+        }
+
+        .profile-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Botão com Efeito de Luz */
+        .btn-talk {
+            position: relative;
+            overflow: hidden;
+            background-color: var(--deep-blue);
+            color: white;
+            text-decoration: none;
+            padding: 18px 35px;
+            border-radius: 50px;
+            font-weight: 900;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: 0.4s;
+            border: 1px solid var(--accent);
+            display: inline-block;
+            width: 100%; /* Faz o botão respeitar a largura do conteúdo do card */
+            max-width: 280px;
+        }
+
+        .btn-talk::after {
+            content: '';
+            position: absolute;
+            top: -50%; left: -100%; width: 50%; height: 200%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent);
+            transform: rotate(30deg);
+            animation: scan 3s infinite;
+        }
+
+        @keyframes scan {
+            0% { left: -100%; }
+            100% { left: 150%; }
+        }
+
+        .btn-talk:hover {
+            background-color: var(--accent);
+            color: #000;
+            box-shadow: 0 0 30px var(--accent);
+        }
+
+        /* Tipografia */
+        h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 900;
+            line-height: 1.1;
+        }
+
+        h2 {
+            font-size: 1rem;
+            letter-spacing: 8px;
+            color: var(--accent);
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1.3rem;
+            color: #8892b0;
+            max-width: 800px;
+            margin-top: 25px;
+        }
+
+        /* Animações de Aparição */
+        .reveal {
+            opacity: 0;
+            transform: translateY(60px);
+            transition: all 1s cubic-bezier(0.17, 0.85, 0.438, 0.99);
+        }
+
+        .active .reveal {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .footer-info {
+            position: absolute;
+            bottom: 40px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 60px;
+            font-size: 0.75rem;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cursor-glow" id="glow"></div>
+    <div id="particles-js"></div>
+
+    <div class="header-nav">
+        <div class="logo-box">W</div>
+        <span style="font-weight: bold; letter-spacing: 3px;">WNET</span>
+    </div> 
+    <section class="active">
+        <div class="profile-container reveal">
+            <div class="profile-img-wrapper">
+                <a href="https://ibb.co/0RmLGy5W"><img src="https://i.ibb.co/PvFy6Gkb/4908987310133676994.jpg" alt="4908987310133676994" border="0"></a>" alt="Programador">
+            </div>
+            <a href="https://wa.me/5597984475124" class="btn-talk">Falar com Programador</a>
+        </div>
+    </section>
+
+    <section>
+        <h2 class="reveal">Projetos Exclusivos</h2>
+        <h1 class="reveal">A <span style="color: var(--accent);">WNET</span> busca mudar a maneira de criação.</h1>
+    </section>
+
+    <section>
+        <h2 class="reveal">A Evolução</h2>
+        <h1 class="reveal">A EVOLUÇÃO COMEÇA AQUI</h1>
+        <p class="reveal">DESENVOLVER É COLOCAR IDEIAS EM PRÁTICA COM <span style="color: #fff;">PRECISÃO.</span></p>
+    </section>
+
+    <section>
+        <h2 class="reveal">Alto Crescimento</h2>
+        <h1 class="reveal">IMPULSIONE O SEU NEGÓCIO</h1>
+        <p class="reveal">O lugar certo para desenvolver seu <br> <b style="color: var(--accent);">SITE OU APLICATIVO.</b></p>
+    </section>
+
+    <section>
+        <h1 class="reveal">PERDENDO TEMPO?</h1>
+        <p class="reveal" style="color: #fff;">A WNET constrói o futuro enquanto outros apenas observam.</p>
+        <br><br>
+        <a href="https://wa.me/5597984475124" class="btn-talk reveal">Iniciar Projeto</a>
+        
+        <div class="footer-info">
+            <div>CONDIÇÕES E SUPORTE | POLÍTICA DE PRIVACIDADE</div>
+            <div>© 2026 WNET</div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Efeito de brilho que segue o mouse
+        const glow = document.getElementById('glow');
+        document.addEventListener('mousemove', (e) => {
+            glow.style.left = e.clientX + 'px';
+            glow.style.top = e.clientY + 'px';
+        });
+
+        // Partículas de fundo
+        particlesJS('particles-js', {
+            "particles": {
+                "number": { "value": 80 },
+                "color": { "value": "#00d2ff" },
+                "opacity": { "value": 0.2 },
+                "size": { "value": 2 },
+                "line_linked": { "enable": true, "distance": 150, "color": "#00d2ff", "opacity": 0.1, "width": 1 },
+                "move": { "enable": true, "speed": 1 }
+            }
+        });
+
+        // Ativador de animação por scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('section').forEach(section => observer.observe(section));
+    </script>
+</body>
+</html>
